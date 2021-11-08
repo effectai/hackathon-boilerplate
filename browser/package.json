@@ -1,0 +1,27 @@
+{
+  "name": "browser",
+  "version": "1.0.0",
+  "description": "",
+  "private": "true",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "http-server",
+    "build": "webpack",
+    "build:watch": "webpack -w"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@effectai/effect-js": "^0.0.14",
+    "eosjs": "^22.1.0",
+    "ethers": "^5.5.1",
+    "lodash": "^4.17.21",
+    "web3": "^1.6.0"
+  },
+  "devDependencies": {
+    "http-server": "^14.0.0",
+    "webpack": "^5.62.1",
+    "webpack-cli": "^4.9.1"
+  }
+}
