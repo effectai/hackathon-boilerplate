@@ -5,15 +5,13 @@
   "private": "true",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "serve": "http-server",
-    "build": "webpack",
-    "build:watch": "webpack -w"
+    "serve": "http-server -c -1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@effectai/effect-js": "^0.0.14",
+    "@effectai/effect-js": "^0.0.26",
     "eosjs": "^22.1.0",
     "ethers": "^5.5.1",
     "lodash": "^4.17.21",
