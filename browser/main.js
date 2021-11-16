@@ -18,7 +18,7 @@ import "/node_modules/@effectai/effect-js/dist/index.umd.js"
 // import { JsSignatureProvider } from "./eosjs/dist-web/eosjs-jssig.js";
 
 console.log('Live from main.js! 🔥️🔥️🔥️');
-let sdk
+let sdk, burnerAccount, metaMaskAccount;
 let connectAccount = { accountService: undefined, address: undefined, detail: undefined };
 
 /**
@@ -74,6 +74,7 @@ document.getElementById('btn-create-burner-wallet').onclick = () => {
     console.log('creating burner wallet...')
     try {
         const burnerWallet = effectsdk.createAccount();
+        burnerAccount = effectsdk.createWallet(burnerWallet);
         
         connectAccount.detail = burnerWallet
         connectAccount.address = burnerWallet.address
@@ -97,26 +98,32 @@ document.getElementById('btn-create-burner-wallet').onclick = () => {
  * https://chainlist.org/
  */
 document.getElementById('btn-metamask').onclick =  async () => {
-    console.log('Connecting to Wallet.')
-    try {
-        const ethAccount = await ethereum.request({ method: 'eth_requestAccounts' });
-        await ethereum.request({
-            method: 'wallet_switchEthereumChain',
-            params: [{ chainId: '0x38' }] // 0x38 is the chainId of bsc testnet.    
-        }) 
-
-        connectAccount.detail = ethAccount
-        connectAccount.address = ethAccount[0]
-        connectAccount.accountService = 'metamask'
-
-        document.getElementById('metamask-account').innerHTML = 
-        `Metmask Account: <p>${JSON.stringify(ethAccount, null, 2)}</p>
-         ChainID: <p>${JSON.stringify(ethereum.chainId, null, 2)}</p>`
-
-        document.getElementById('connect-to').innerText = `Connect with MetamaskAccount: ${ethAccount[0]}`
-
-    } catch (error) {
-        console.error(error)
+    console.log('Connecting to metamask wallet.')
+    if(window.ethereum) {
+        try {
+            const ethAccount = await ethereum.request({ method: 'eth_requestAccounts' });
+            await ethereum.request({
+                method: 'wallet_switchEthereumChain',
+                params: [{ chainId: '0x38' }] // 0x38 is the chainId of bsc testnet.    
+            }) 
+    
+            // const metamaskAccount = new effectsdk.createWallet(ethAccount)
+            
+            connectAccount.detail = ethAccount
+            connectAccount.address = ethAccount[0]
+            connectAccount.accountService = 'metamask'
+    
+            document.getElementById('metamask-account').innerHTML = 
+            `Metmask Account: <p>${JSON.stringify(ethAccount, null, 2)}</p>
+             ChainID: <p>${JSON.stringify(ethereum.chainId, null, 2)}</p>`
+    
+            document.getElementById('connect-to').innerText = `Connect with MetamaskAccount: ${ethAccount[0]}`
+    
+        } catch (error) {
+            console.error(error)
+        }
+    } else {
+        alert('Metamask not installed.')
     }
 }
 
@@ -128,16 +135,13 @@ document.getElementById('btn-connect-account').onclick = async () => {
     let connectReponse;
     try {
         if (connectAccount.accountService === 'burnerwallet') {
-            const signatureProvider = new JsSignatureProvider([connectAccount.detail.privateKey]) // privkey needs to be passed as in an array of strings
-            connectReponse = await sdk.connectAccount(signatureProvider)
+            connectReponse = await sdk.connectAccount(burnerAccount)
         } else if (connectAccount.accountService === 'metamask') {
-            const w3 = new Web3(window.ethereum)
-            console.log(w3)
-            connectReponse = await sdk.connectAccount(w3)
+            const metaWeb3 = new Web3(window.ethereum)
+            connectReponse = await sdk.connectAccount(metaWeb3)
         } else {
             connectReponse = await sdk.connectAccount()
         }
-        
         document.getElementById('connect-account').innerHTML = `<p>${JSON.stringify(connectReponse, null, 2)}</p>`
     } catch (error) {
         console.error(error)
