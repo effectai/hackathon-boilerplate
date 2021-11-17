@@ -167,7 +167,7 @@ document.getElementById('btn-connect-account').onclick = async () => {
 }
 
 /**
- * DEBUG
+ * TODO DEBUG
  * Make Campaign
  * We need to upload the campaign to IPFS, then create the campaign on the blockchain.
  * This is done for us by the makeCampaign function.
