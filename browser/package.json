@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@effectai/effect-js": "^0.0.26",
+    "@effectai/effect-js": "^0.0.34",
     "eosjs": "^22.1.0",
     "ethers": "^5.5.1",
     "lodash": "^4.17.21",

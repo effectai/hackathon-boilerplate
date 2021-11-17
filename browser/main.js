@@ -1,7 +1,8 @@
-import "/node_modules/@effectai/effect-js/dist/index.umd.js"
+// Import from you local node_modules folder
+// import "/node_modules/@effectai/effect-js/dist/index.umd.js"
 
 // import from unpkg
-// import { exports } from 'https://unpkg.com/@effectai/effect-js@0.0.31/dist/index.umd.js'
+// import 'https://unpkg.com/@effectai/effect-js@0.0.34/dist/index.umd.js'
 
 /**
  * Experiments to get JsSignature provider to work:
@@ -207,7 +208,7 @@ document.getElementById('btn-make-campaign').onclick = async () => {
  * TODO
  * Make Batch
  */
-document.getElementById('btn-key').onclick = () => {
+document.getElementById('btn-make-batch').onclick = async () => {
     console.log('generating key...')
     try {
         const campaignId = 88
@@ -243,7 +244,7 @@ document.getElementById('btn-key').onclick = () => {
  * TODO
  * Results
  */
-document.getElementById('btn-key').onclick = () => {
+document.getElementById('btn-get-result').onclick = async () => {
     console.log('generating key...')
     try {
         
