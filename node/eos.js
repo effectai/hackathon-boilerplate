@@ -1,8 +1,8 @@
-const { EffectClient, createAccount, createWallet } = require('../dist/lib')
+const { EffectClient, createAccount, createWallet } = require('@effectai/effect-js')
 const fs = require('fs')
 
 const main = async () => {
-    console.log('Starting BSC example.')
+    console.log('Starting EOS example.')
     const sdk = new EffectClient('kylin')
 
     // Instantiating bsc account.
@@ -19,7 +19,7 @@ const main = async () => {
 
     console.log('effectAccount', effectAccount)
 
-    const templateContent = fs.readFileSync('./template.json', 'utf8').toString()
+    const templateContent = fs.readFileSync('./template.html', 'utf8').toString()
 
     const campaignToIpfs = {
         title: 'Random Title',

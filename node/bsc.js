@@ -1,4 +1,4 @@
-const { EffectClient, createAccount, createWallet } = require('../dist/lib')
+const { EffectClient, createAccount, createWallet } = require('@effectai/effect-js')
 const fs = require('fs')
 
 const main = async () => {
