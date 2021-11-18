@@ -13,7 +13,7 @@ let connectAccount = { providerName: undefined, provider: undefined, account: un
  * Create a new Effect SDK client.
  * Note how the entry name is `effectsdk`!.
  */
-const generateClient = () => {
+function generateClient() {
     console.log('Creating SDK...')
     try {
         sdk = new effectsdk.EffectClient('kylin')
@@ -39,7 +39,7 @@ const generateClient = () => {
 /**
  * Calling methods from the effectclient without connecting an account.
  */
-const getCampaign = async () => {
+async function getCampaign() {
     const balanceReponse = await sdk.force.getPendingBalance();
     const campaignResponse = await sdk.force.getCampaign(5)
     console.log(JSON.stringify(campaignResponse), JSON.stringify(balanceReponse))
@@ -60,7 +60,7 @@ const getCampaign = async () => {
  * Generates a new account when no parameter is passed.
  * Otherwise pass a web3 private key to create an account.
  */
-const createBurnerWallet = () => {
+function createBurnerWallet() {
     console.log('creating burner wallet...')
     try {
         // When no parameters are passed to createAccount() a new keypair is generated.
@@ -89,7 +89,7 @@ const createBurnerWallet = () => {
  * Bsc-Testnet: 0x61 (hex), 97 (decimal)
  * 
  */
-const connectMetamask = async () => {
+async function connectMetamask() {
     console.log('Connecting to metamask wallet.')
     if (window.ethereum) {
         try {
@@ -121,7 +121,7 @@ const connectMetamask = async () => {
 /**
  * EOS Anchor Wallet
  */
-const connectAnchor = async () => {
+async function connectAnchor() {
     try {
         const transport = new AnchorLinkBrowserTransport()
         const alink = new AnchorLink({
@@ -154,7 +154,7 @@ const connectAnchor = async () => {
 /**
  * Connect to Effect Account using burnerwallet, metamask or anchor
  */
-const connectEffectAccount = async () => {
+async function connectEffectAccount() {
     console.log('Connecting to account with wallet.')
     let connectReponse;
     try {
@@ -175,7 +175,7 @@ const connectEffectAccount = async () => {
  * We need to upload the campaign to IPFS, then create the campaign on the blockchain.
  * This is done for us by the makeCampaign function.
  */
-const makeCampaign = async () => {
+async function makeCampaign() {
     console.log('creating campaign...')
 
     try {
@@ -211,7 +211,7 @@ const makeCampaign = async () => {
  * TODO
  * Make Batch
  */
-const makeBatch = async () => {
+async function makeBatch() {
     try {
         const campaignId = 88
         const campaign = await sdk.force.getCampaign(campaignId)
@@ -247,7 +247,7 @@ const makeBatch = async () => {
  * TODO
  * Results
  */
-const getResults = async () => {
+async function getResults() {
     console.log('generating key...')
     try {
         // Get task submissions of batch.
