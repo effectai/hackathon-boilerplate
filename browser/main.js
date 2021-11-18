@@ -4,20 +4,6 @@
 // import from unpkg
 // import 'https://unpkg.com/@effectai/effect-js@0.0.34/dist/index.umd.js'
 
-/**
- * Experiments to get JsSignature provider to work:
- * Figure out how to get jssig working, eosjs transit looks like to be the best solution at the moment to get it to work with an eosjs wallet.
- */
-
-// npn install eosjs
-// import { JsSignatureProvider } from './node_modules/eosjs/dist/eosjs-jssig.js'
-// import { JsSignatureProvider } from '/node_modules/eosjs/dist/eosjs-jssig'
-// import * as eosjs from '/node_modules/eosjs/dist/eosjs-jssig.js'
-// import * as eosjs from 'https://unpkg.com/eosjs@22.1.0/dist/eosjs-jssig'
-
-// git clone eosjs
-// import { JsSignatureProvider } from "./eosjs/dist-web/eosjs-jssig.js";
-
 console.log('Live from main.js! 🔥️🔥️🔥️');
 let sdk;
 let connectAccount = { providerName: undefined, provider: undefined, account: undefined };
@@ -27,7 +13,7 @@ let connectAccount = { providerName: undefined, provider: undefined, account: un
  * Create a new Effect SDK client.
  * Note how the entry name is `effectsdk`!.
  */
-document.getElementById('btn-generate-client').onclick = () => {
+const generateClient = () => {
     console.log('Creating SDK...')
     try {
         sdk = new effectsdk.EffectClient('kylin')
@@ -53,7 +39,7 @@ document.getElementById('btn-generate-client').onclick = () => {
 /**
  * Calling methods from the effectclient without connecting an account.
  */
-document.getElementById('btn-get-campaign').onclick = async () => {
+const getCampaign = async () => {
     const balanceReponse = await sdk.force.getPendingBalance();
     const campaignResponse = await sdk.force.getCampaign(5)
     console.log(JSON.stringify(campaignResponse), JSON.stringify(balanceReponse))
@@ -74,7 +60,7 @@ document.getElementById('btn-get-campaign').onclick = async () => {
  * Generates a new account when no parameter is passed.
  * Otherwise pass a web3 private key to create an account.
  */
-document.getElementById('btn-create-burner-wallet').onclick = () => {
+const createBurnerWallet = () => {
     console.log('creating burner wallet...')
     try {
         // When no parameters are passed to createAccount() a new keypair is generated.
@@ -88,6 +74,7 @@ document.getElementById('btn-create-burner-wallet').onclick = () => {
         document.getElementById('burner-wallet').innerHTML = `<p>${JSON.stringify(burnerAccount, null, 2)}</p>`
         document.getElementById('connect-to').innerText = `Connect with burner-wallet ${burnerAccount.address}`
     } catch (error) {
+        alert('Something went wrong. See console for error message')
         console.error(error)
     }
 }
@@ -102,7 +89,7 @@ document.getElementById('btn-create-burner-wallet').onclick = () => {
  * Bsc-Testnet: 0x61 (hex), 97 (decimal)
  * 
  */
-document.getElementById('btn-metamask').onclick = async () => {
+const connectMetamask = async () => {
     console.log('Connecting to metamask wallet.')
     if (window.ethereum) {
         try {
@@ -123,6 +110,7 @@ document.getElementById('btn-metamask').onclick = async () => {
             document.getElementById('connect-to').innerText = `Connect with MetamaskAccount: ${ethAccount[0]}`
 
         } catch (error) {
+            alert('Something went wrong. See console for error message')
             console.error(error)
         }
     } else {
@@ -131,10 +119,9 @@ document.getElementById('btn-metamask').onclick = async () => {
 }
 
 /**
- * TODO
- * Anchor Wallet
+ * EOS Anchor Wallet
  */
-document.getElementById('btn-anchor').onclick = async () => {
+const connectAnchor = async () => {
     try {
         const transport = new AnchorLinkBrowserTransport()
         const alink = new AnchorLink({
@@ -149,7 +136,6 @@ document.getElementById('btn-anchor').onclick = async () => {
         // Perform the login, which returns the users identity
         const identity = await alink.login('hackathon-boilerplate')
 
-        // Save the session within your application for future use
         const { session } = identity
         const signatureProvider = session.makeSignatureProvider()
         const account = { accountName: session.auth.actor.toString(), permission: session.auth.permission.toString() }
@@ -160,36 +146,36 @@ document.getElementById('btn-anchor').onclick = async () => {
         document.getElementById('connect-to').innerText = `Connect with Anchor Account: ${session.auth}`
 
     } catch (error) {
+        alert('Something went wrong. See console for error message')
         console.error(error)
     }
 }
 
 /**
- * Connect to Effect Account using burnerwallet, metamask
+ * Connect to Effect Account using burnerwallet, metamask or anchor
  */
-document.getElementById('btn-connect-account').onclick = async () => {
+const connectAccount = async () => {
     console.log('Connecting to account with wallet.')
     let connectReponse;
     try {
         if (connectAccount.provider) {
             connectReponse = await sdk.connectAccount(connectAccount.provider, connectAccount.account)
         } else {
-            // connectReponse = await sdk.connectAccount()
             alert('Login with on of the wallet.')
         }
         document.getElementById('connect-account').innerHTML = `<p>${JSON.stringify(connectReponse, null, 2)}</p>`
     } catch (error) {
+        alert('Something went wrong. See console for error message')
         console.error(error)
     }
 }
 
 /**
- * TODO DEBUG
  * Make Campaign
  * We need to upload the campaign to IPFS, then create the campaign on the blockchain.
  * This is done for us by the makeCampaign function.
  */
-document.getElementById('btn-make-campaign').onclick = async () => {
+const makeCampaign = async () => {
     console.log('creating campaign...')
 
     try {
@@ -216,6 +202,7 @@ document.getElementById('btn-make-campaign').onclick = async () => {
         const divShowCampaign = document.getElementById('show-campaign');
         divShowCampaign.innerHTML = `<p>${JSON.stringify(makeCampaingResponse, null, 2)}</p>`
     } catch (error) {
+        alert('Something went wrong. See console for error message')
         console.error(error)
     }
 }
@@ -224,8 +211,7 @@ document.getElementById('btn-make-campaign').onclick = async () => {
  * TODO
  * Make Batch
  */
-document.getElementById('btn-make-batch').onclick = async () => {
-    console.log('generating key...')
+const makeBatch = async () => {
     try {
         const campaignId = 88
         const campaign = await sdk.force.getCampaign(campaignId)
@@ -252,6 +238,7 @@ document.getElementById('btn-make-batch').onclick = async () => {
         console.log(batch);
 
     } catch (error) {
+        alert('Something went wrong. See console for error message')
         console.error(error)
     }
 }
@@ -260,14 +247,14 @@ document.getElementById('btn-make-batch').onclick = async () => {
  * TODO
  * Results
  */
-document.getElementById('btn-get-result').onclick = async () => {
+const getResults = async () => {
     console.log('generating key...')
     try {
-
         // Get task submissions of batch.
         const taskResults = await sdk.force.getTaskSubmissionsForBatch()
         console.log('taskResults for new batch', taskResults)
     } catch (error) {
+        alert('Something went wrong. See console for error message')
         console.error(error)
     }
 }
