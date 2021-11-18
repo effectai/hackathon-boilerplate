@@ -1,90 +1,92 @@
 <!DOCTYPE html encoding>
 <html lang="en">
 
-  <head>
-    <title>Effect Boilerplate</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="author" content="Effect Network">
+<head>
+  <title>Effect Boilerplate</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Effect Network">
 
-    <!-- unpkg.com/:package@:version/:file -->
-    <script type="module" src="https://unpkg.com/@effectai/effect-js@0.0.34/dist/index.umd.js"></script>
-    
-    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
-  </head>
-  
-  <body>
-    <noscript>
-      You need to enable JavaScript to run this app.
-    </noscript>
+  <!-- unpkg.com/:package@:version/:file -->
+  <script type="module" src="https://unpkg.com/@effectai/effect-js@0.0.34/dist/index.umd.js"></script>
 
-    <h1>Effect Network Hackathon Boilerplate 🫖</h1>
-    
-    <br>
-    <div>
-      <h2>SDK Client 🌠</h2>
-      <button type="button" id="btn-generate-client">Initialize Client</button>
-      <div id="sdk-client"></div>
-    </div>
-           
-    <hr>
-    <div>
-      <h2>Retrieve Campaign 🤩</h2>
-      <button type="button" disabled id="btn-get-campaign">Get Campaign</button>
-      <div id="show-get-campaign"></div>
-    </div>
-        
-    <hr>
-    <div >
-      <h2>Burner Wallet 🧯</h2>
-      <button id="btn-create-burner-wallet">Generate Burner Wallet</button>
-      <div id="burner-wallet"></div>
-    </div>
+  <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+  <script src="https://unpkg.com/anchor-link@3"></script>
+  <script src="https://unpkg.com/anchor-link-browser-transport@3"></script>
+</head>
 
-    <hr>
-    <div>
-      <h2>MetaMask 🦊</h2>
-      <button id="btn-metamask">Connect to Metamask</button>
-      <div id="metamask-account"></div>
-    </div>
+<body>
+  <noscript>
+    You need to enable JavaScript to run this app.
+  </noscript>
 
-    <hr>
-    <div>
-      <h2>Anchor ⚓</h2>
-      <button id="btn-anchor">Connect to Metamask</button>
-      <div id="anchor-account"></div>
-    </div>
+  <h1>Effect Network Hackathon Boilerplate 🫖</h1>
 
-    <hr>
-    <div>
-      <h2>Connect Account 🖇</h2>
-      <button type="button" disabled id="btn-connect-account">Connect Anchor</button>
-      <p id="connect-to">Generate new burner wallet and register account.</p>
-      <div id="connect-account"></div>
-    </div>
+  <br>
+  <div>
+    <h2>SDK Client 🌠</h2>
+    <button type="button" id="btn-generate-client">Initialize Client</button>
+    <div id="sdk-client"></div>
+  </div>
 
-    <hr>
-    <div>
-      <h2>Campaign 🍨</h2>
-      <button type="button" disabled id="btn-make-campaign">Make Campaign</button>
-      <div id="show-campaign"></div>
-    </div>
+  <hr>
+  <div>
+    <h2>Retrieve Campaign 🤩</h2>
+    <button type="button" disabled id="btn-get-campaign">Get Campaign</button>
+    <div id="show-get-campaign"></div>
+  </div>
 
-    <hr>
-    <div>
-      <h2>Batch 🛁</h2>
-      <button type="button" disabled id="btn-make-batch">Make Batch</button>
-      <div id="show-batch"></div>
-    </div>
+  <hr>
+  <div>
+    <h2>Burner Wallet 🧯</h2>
+    <button id="btn-create-burner-wallet">Generate Burner Wallet</button>
+    <div id="burner-wallet"></div>
+  </div>
 
-    <hr>
-    <div>
-      <h2>Results 🌙</h2>
-      <button type="button" disabled id="btn-get-result">Get Result</button>
-      <div id="show-result"></div>
-    </div>
+  <hr>
+  <div>
+    <h2>MetaMask 🦊</h2>
+    <button id="btn-metamask">Connect to Metamask</button>
+    <div id="metamask-account"></div>
+  </div>
 
-    <script type="module" src="main.js"></script>
-  </body>
+  <hr>
+  <div>
+    <h2>Anchor ⚓</h2>
+    <button id="btn-anchor">Connect to Anchor</button>
+    <div id="anchor-account"></div>
+  </div>
+
+  <hr>
+  <div>
+    <h2>Connect Account 🖇</h2>
+    <button type="button" disabled id="btn-connect-account">Connect Account</button>
+    <p id="connect-to">Generate new burner wallet and register account.</p>
+    <div id="connect-account"></div>
+  </div>
+
+  <hr>
+  <div>
+    <h2>Campaign 🍨</h2>
+    <button type="button" disabled id="btn-make-campaign">Make Campaign</button>
+    <div id="show-campaign"></div>
+  </div>
+
+  <hr>
+  <div>
+    <h2>Batch 🛁</h2>
+    <button type="button" disabled id="btn-make-batch">Make Batch</button>
+    <div id="show-batch"></div>
+  </div>
+
+  <hr>
+  <div>
+    <h2>Results 🌙</h2>
+    <button type="button" disabled id="btn-get-result">Get Result</button>
+    <div id="show-result"></div>
+  </div>
+
+  <script type="module" src="main.js?v=9"></script>
+</body>
 
 </html>
