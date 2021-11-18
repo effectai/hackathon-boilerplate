@@ -25,42 +25,42 @@
   <br>
   <div>
     <h2>SDK Client 🌠</h2>
-    <button type="button" id="btn-generate-client">Initialize Client</button>
+    <button id="btn-generate-client" onclick="generateClient()">Initialize Client</button>
     <div id="sdk-client"></div>
   </div>
 
   <hr>
   <div>
     <h2>Retrieve Campaign 🤩</h2>
-    <button type="button" disabled id="btn-get-campaign">Get Campaign</button>
+    <button disabled id="btn-get-campaign" onclick="getCampaign()">Get Campaign</button>
     <div id="show-get-campaign"></div>
   </div>
 
   <hr>
   <div>
     <h2>Burner Wallet 🧯</h2>
-    <button id="btn-create-burner-wallet">Generate Burner Wallet</button>
+    <button id="btn-create-burner-wallet" onclick="createBurnerWallet()">Generate Burner Wallet</button>
     <div id="burner-wallet"></div>
   </div>
 
   <hr>
   <div>
     <h2>MetaMask 🦊</h2>
-    <button id="btn-metamask">Connect to Metamask</button>
+    <button id="btn-metamask" onclick="connectMetamask()">Connect to Metamask</button>
     <div id="metamask-account"></div>
   </div>
 
   <hr>
   <div>
     <h2>Anchor ⚓</h2>
-    <button id="btn-anchor">Connect to Anchor</button>
+    <button id="btn-anchor" onclick="connectAnchor()">Connect to Anchor</button>
     <div id="anchor-account"></div>
   </div>
 
   <hr>
   <div>
     <h2>Connect Account 🖇</h2>
-    <button type="button" disabled id="btn-connect-account">Connect Account</button>
+    <button disabled id="btn-connect-account" onclick="connectAccount()">Connect Account</button>
     <p id="connect-to">Generate new burner wallet and register account.</p>
     <div id="connect-account"></div>
   </div>
@@ -68,25 +68,25 @@
   <hr>
   <div>
     <h2>Campaign 🍨</h2>
-    <button type="button" disabled id="btn-make-campaign">Make Campaign</button>
+    <button disabled id="btn-make-campaign" onclick="makeCampaign()">Make Campaign</button>
     <div id="show-campaign"></div>
   </div>
 
   <hr>
   <div>
     <h2>Batch 🛁</h2>
-    <button type="button" disabled id="btn-make-batch">Make Batch</button>
+    <button disabled id="btn-make-batch" onclick="makeBatch()">Make Batch</button>
     <div id="show-batch"></div>
   </div>
 
   <hr>
   <div>
     <h2>Results 🌙</h2>
-    <button type="button" disabled id="btn-get-result">Get Result</button>
+    <button disabled id="btn-get-result" onclick="getResults()">Get Results</button>
     <div id="show-result"></div>
   </div>
 
-  <script type="module" src="main.js?v=9"></script>
+  <script type="module" src="main.js"></script>
 </body>
 
 </html>
