@@ -19,8 +19,8 @@
 // import { JsSignatureProvider } from "./eosjs/dist-web/eosjs-jssig.js";
 
 console.log('Live from main.js! 🔥️🔥️🔥️');
-let sdk, burnerAccount, metaMaskAccount;
-let connectAccount = { accountService: undefined, address: undefined, detail: undefined };
+let sdk;
+let connectAccount = { providerName: undefined, provider: undefined, account: undefined };
 
 /**
  * SDK Client
@@ -31,23 +31,23 @@ document.getElementById('btn-generate-client').onclick = () => {
     console.log('Creating SDK...')
     try {
         sdk = new effectsdk.EffectClient('kylin')
-        console.log(sdk)   
+        console.log(sdk)
         const divSdkClient = document.getElementById('sdk-client');
-        divSdkClient.innerHTML = 
-        `SDK Client: Connected ✅ (See console for more info.): 
+        divSdkClient.innerHTML =
+            `SDK Client: Connected ✅ (See console for more info.): 
          <p>Host: ${sdk.config.host}</p>
          <p>IPFS ${sdk.config.ipfs_node}</p>
          <p>Network: ${sdk.config.network}</p>`;
 
-         // If successfull remove disabled attribute for buttons.
-         document.getElementById('btn-connect-account').removeAttribute('disabled')
-         document.getElementById('btn-get-campaign').removeAttribute('disabled')
-         document.getElementById('btn-make-campaign').removeAttribute('disabled')
+        // If successfull remove disabled attribute for buttons.
+        document.getElementById('btn-connect-account').removeAttribute('disabled')
+        document.getElementById('btn-get-campaign').removeAttribute('disabled')
+        document.getElementById('btn-make-campaign').removeAttribute('disabled')
     } catch (error) {
         console.error(error)
         const divSdkClient = document.getElementById('sdk-client');
         divSdkClient.innerHTML = `<p>${JSON.stringify(error)}</p>`
-    }        
+    }
 }
 
 /**
@@ -58,8 +58,8 @@ document.getElementById('btn-get-campaign').onclick = async () => {
     const campaignResponse = await sdk.force.getCampaign(5)
     console.log(JSON.stringify(campaignResponse), JSON.stringify(balanceReponse))
 
-    document.getElementById('show-get-campaign').innerHTML = 
-    `<p>ID: ${campaignResponse.id}</p>
+    document.getElementById('show-get-campaign').innerHTML =
+        `<p>ID: ${campaignResponse.id}</p>
      <p>Owner: ${campaignResponse.owner}</p>
      <p>Hash: ${campaignResponse.content.field_1}</p>
      <p>Reward : ${JSON.stringify(campaignResponse.reward)}</p>
@@ -78,16 +78,15 @@ document.getElementById('btn-create-burner-wallet').onclick = () => {
     console.log('creating burner wallet...')
     try {
         // When no parameters are passed to createAccount() a new keypair is generated.
-        const burnerWallet = effectsdk.createAccount( /* Insert Private key here */);
+        const burnerAccount = effectsdk.createAccount( /* Insert Private key here */);
+        const burnerWallet = effectsdk.createWallet(burnerAccount);
 
-        burnerAccount = effectsdk.createWallet(burnerWallet);
-        
-        connectAccount.detail = burnerWallet
-        connectAccount.address = burnerWallet.address
-        connectAccount.accountService = 'burnerwallet'
+        connectAccount.provider = burnerWallet
+        connectAccount.account = null
+        connectAccount.providerName = 'burnerwallet'
 
-        document.getElementById('burner-wallet').innerHTML = `<p>${JSON.stringify(burnerWallet, null, 2)}</p>`
-        document.getElementById('connect-to').innerText = `Connect with burner-wallet`
+        document.getElementById('burner-wallet').innerHTML = `<p>${JSON.stringify(burnerAccount, null, 2)}</p>`
+        document.getElementById('connect-to').innerText = `Connect with burner-wallet ${burnerAccount.address}`
     } catch (error) {
         console.error(error)
     }
@@ -103,26 +102,26 @@ document.getElementById('btn-create-burner-wallet').onclick = () => {
  * Bsc-Testnet: 0x61 (hex), 97 (decimal)
  * 
  */
-document.getElementById('btn-metamask').onclick =  async () => {
+document.getElementById('btn-metamask').onclick = async () => {
     console.log('Connecting to metamask wallet.')
-    if(window.ethereum) {
+    if (window.ethereum) {
         try {
             const ethAccount = await ethereum.request({ method: 'eth_requestAccounts' });
             await ethereum.request({
                 method: 'wallet_switchEthereumChain',
                 params: [{ chainId: '0x38' }] // 0x38 is the chainId of bsc testnet.    
-            }) 
-                
-            connectAccount.detail = ethAccount
-            connectAccount.address = ethAccount[0]
-            connectAccount.accountService = 'metamask'
-    
-            document.getElementById('metamask-account').innerHTML = 
-            `Metmask Account: <p>${JSON.stringify(ethAccount, null, 2)}</p>
+            })
+
+            connectAccount.provider = new Web3(window.ethereum)
+            connectAccount.account = null
+            connectAccount.providerName = 'metamask'
+
+            document.getElementById('metamask-account').innerHTML =
+                `Metmask Account: <p>${JSON.stringify(ethAccount, null, 2)}</p>
              ChainID: <p>${JSON.stringify(ethereum.chainId, null, 2)}</p>`
-    
+
             document.getElementById('connect-to').innerText = `Connect with MetamaskAccount: ${ethAccount[0]}`
-    
+
         } catch (error) {
             console.error(error)
         }
@@ -135,11 +134,31 @@ document.getElementById('btn-metamask').onclick =  async () => {
  * TODO
  * Anchor Wallet
  */
-document.getElementById('btn-anchor').onclick = () => {
-    console.log('generating key...')
-
+document.getElementById('btn-anchor').onclick = async () => {
     try {
-        // Do stuff
+        const transport = new AnchorLinkBrowserTransport()
+        const alink = new AnchorLink({
+            transport,
+            chains: [
+                {
+                    chainId: '5fff1dae8dc8e2fc4d5b23b2c7665c97f9e9d8edf2b6485a86ba311c25639191',
+                    nodeUrl: 'https://api.kylin.alohaeos.com',
+                }
+            ],
+        })
+        // Perform the login, which returns the users identity
+        const identity = await alink.login('hackathon-boilerplate')
+
+        // Save the session within your application for future use
+        const { session } = identity
+        const signatureProvider = session.makeSignatureProvider()
+        const account = { accountName: session.auth.actor.toString(), permission: session.auth.permission.toString() }
+        console.log(`Logged in as`, account)
+        connectAccount.provider = signatureProvider
+        connectAccount.account = account
+        connectAccount.providerName = 'anchor'
+        document.getElementById('connect-to').innerText = `Connect with Anchor Account: ${session.auth}`
+
     } catch (error) {
         console.error(error)
     }
@@ -152,11 +171,8 @@ document.getElementById('btn-connect-account').onclick = async () => {
     console.log('Connecting to account with wallet.')
     let connectReponse;
     try {
-        if (connectAccount.accountService === 'burnerwallet') {
-            connectReponse = await sdk.connectAccount(burnerAccount)
-        } else if (connectAccount.accountService === 'metamask') {
-            const metaWeb3 = new Web3(window.ethereum)
-            connectReponse = await sdk.connectAccount(metaWeb3)
+        if (connectAccount.provider) {
+            connectReponse = await sdk.connectAccount(connectAccount.provider, connectAccount.account)
         } else {
             // connectReponse = await sdk.connectAccount()
             alert('Login with on of the wallet.')
@@ -175,7 +191,7 @@ document.getElementById('btn-connect-account').onclick = async () => {
  */
 document.getElementById('btn-make-campaign').onclick = async () => {
     console.log('creating campaign...')
-    
+
     try {
         // Template String is available in this repo, otherwise it can be anywhere else.
         const templateResponse = await fetch('./template.html')
@@ -188,7 +204,7 @@ document.getElementById('btn-make-campaign').onclick = async () => {
             template: templateText,
             image: 'https://ipfs.effect.ai/ipfs/bafkreiggnttdaxleeii6cdt23i4e24pfcvzyrndf5kzfbqgf3fxjryj5s4',
             category: 'Image Labeling',
-            example_task: {'image_url': 'https://ipfs.effect.ai/ipfs/bafkreidrxwhqsxa22uyjamz7qq3lh7pv2eg3ykodju6n7cgprmjpal2oga'},
+            example_task: { 'image_url': 'https://ipfs.effect.ai/ipfs/bafkreidrxwhqsxa22uyjamz7qq3lh7pv2eg3ykodju6n7cgprmjpal2oga' },
             version: 1,
             reward: 1
         }
@@ -198,7 +214,7 @@ document.getElementById('btn-make-campaign').onclick = async () => {
         console.log(makeCampaingResponse)
 
         const divShowCampaign = document.getElementById('show-campaign');
-        divShowCampaign.innerHTML = `<p>${JSON.stringify(makeCampaingResponse, null, 2)}</p>`        
+        divShowCampaign.innerHTML = `<p>${JSON.stringify(makeCampaingResponse, null, 2)}</p>`
     } catch (error) {
         console.error(error)
     }
@@ -214,20 +230,20 @@ document.getElementById('btn-make-batch').onclick = async () => {
         const campaignId = 88
         const campaign = await sdk.force.getCampaign(campaignId)
         console.log('Campaign', campaign)
-    
+
         // Get Campaign Batches.
         const batches = await sdk.force.getCampaignBatches(campaignId)
         console.log(`Batches for campaign ${campaignId}`, batches)
-    
+
         const content = {
             'tasks': [
-                {"ipfs": "bafkreiggnttdaxleeii6cdt23i4e24pfcvzyrndf5kzfbqgf3fxjryj5s4"}, 
-                {"ipfs": "bafkreidrxwhqsxa22uyjamz7qq3lh7pv2eg3ykodju6n7cgprmjpal2oga"}, 
-                {"ipfs": "bafkreid2ocabg7mo235uuwactlcf7vzxyagoxeroyrubfufwobtqz3q27q"}, 
-                {"ipfs": "bafkreifu5xciyxpwnmkorzddanqtc66i43q5cn4sdkb3l563yjzd7s3274"}
+                { "ipfs": "bafkreiggnttdaxleeii6cdt23i4e24pfcvzyrndf5kzfbqgf3fxjryj5s4" },
+                { "ipfs": "bafkreidrxwhqsxa22uyjamz7qq3lh7pv2eg3ykodju6n7cgprmjpal2oga" },
+                { "ipfs": "bafkreid2ocabg7mo235uuwactlcf7vzxyagoxeroyrubfufwobtqz3q27q" },
+                { "ipfs": "bafkreifu5xciyxpwnmkorzddanqtc66i43q5cn4sdkb3l563yjzd7s3274" }
             ]
         }
-       
+
         const repetitions = 1
         // Create batch for campaign.
         // same here as for campaign, id of batch needs to be returned
@@ -247,7 +263,7 @@ document.getElementById('btn-make-batch').onclick = async () => {
 document.getElementById('btn-get-result').onclick = async () => {
     console.log('generating key...')
     try {
-        
+
         // Get task submissions of batch.
         const taskResults = await sdk.force.getTaskSubmissionsForBatch()
         console.log('taskResults for new batch', taskResults)
