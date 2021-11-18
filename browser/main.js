@@ -154,7 +154,7 @@ const connectAnchor = async () => {
 /**
  * Connect to Effect Account using burnerwallet, metamask or anchor
  */
-const connectAccount = async () => {
+const connectEffectAccount = async () => {
     console.log('Connecting to account with wallet.')
     let connectReponse;
     try {
