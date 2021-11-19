@@ -1,11 +1,5 @@
-// Import from you local node_modules folder
-// import "/node_modules/@effectai/effect-js/dist/index.umd.js"
-
-// import from unpkg
-// import 'https://unpkg.com/@effectai/effect-js@0.0.34/dist/index.umd.js'
-
-console.log('Live from main.js! 🔥️🔥️🔥️');
-let sdk;
+console.log("Live from Amsterdam, it's Effect Network! 🔥️🔥️🔥️");
+let sdk, campaignid;
 let connectAccount = { providerName: undefined, provider: undefined, account: undefined };
 
 /**
@@ -28,7 +22,6 @@ function generateClient() {
         // If successfull remove disabled attribute for buttons.
         document.getElementById('btn-connect-account').removeAttribute('disabled')
         document.getElementById('btn-get-campaign').removeAttribute('disabled')
-        document.getElementById('btn-make-campaign').removeAttribute('disabled')
     } catch (error) {
         console.error(error)
         const divSdkClient = document.getElementById('sdk-client');
@@ -163,6 +156,7 @@ async function connectEffectAccount() {
         } else {
             alert('Login with on of the wallet.')
         }
+        document.getElementById('btn-make-campaign').removeAttribute('disabled')
         document.getElementById('connect-account').innerHTML = `<p>${JSON.stringify(connectReponse, null, 2)}</p>`
     } catch (error) {
         alert('Something went wrong. See console for error message')
@@ -199,6 +193,7 @@ async function makeCampaign() {
         const makeCampaingResponse = await sdk.force.makeCampaign(campaignToIpfs, quantity)
         console.log(makeCampaingResponse)
 
+        document.getElementById('btn-make-batch').removeAttribute('disabled')
         const divShowCampaign = document.getElementById('show-campaign');
         divShowCampaign.innerHTML = `<p>${JSON.stringify(makeCampaingResponse, null, 2)}</p>`
     } catch (error) {
@@ -210,10 +205,12 @@ async function makeCampaign() {
 /**
  * TODO
  * Make Batch
+ * Is the method complete in the smart contract in order to retrieve the campaign id???
  */
 async function makeBatch() {
     try {
         const campaignId = 88
+        const batchId = 3
         const campaign = await sdk.force.getCampaign(campaignId)
         console.log('Campaign', campaign)
 
@@ -233,8 +230,10 @@ async function makeBatch() {
         const repetitions = 1
         // Create batch for campaign.
         // same here as for campaign, id of batch needs to be returned
-        const batch = await sdk.force.createBatch(campaign.id, batches.length, content, repetitions)
 
+        // This is failing, invalid signature error
+        const batchResponse = await sdk.force.createBatch(campaignId, batchId, content, repetitions)
+        document.getElementById('show-batch').innerHTML = `<p>${JSON.stringify(batchResponse, null, 2)}</p>`
         console.log(batch);
 
     } catch (error) {
