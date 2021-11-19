@@ -8,7 +8,8 @@
   <meta name="author" content="Effect Network">
 
   <!-- unpkg.com/:package@:version/:file -->
-  <script type="module" src="https://unpkg.com/@effectai/effect-js@0.0.34/dist/index.umd.js"></script>
+  <script src="https://unpkg.com/@effectai/effect-js/dist/index.js"></script>
+  <!-- <script src="./node_modules/@effectai/effect-js/dist/index.js"></script> -->
 
   <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
   <script src="https://unpkg.com/anchor-link@3"></script>
@@ -25,42 +26,42 @@
   <br>
   <div>
     <h2>SDK Client 🌠</h2>
-    <button id="btn-generate-client" onclick="generateClient()">Initialize Client</button>
+    <button type="button" id="btn-generate-client" onclick="generateClient()">Initialize Client</button>
     <div id="sdk-client"></div>
   </div>
 
   <hr>
   <div>
     <h2>Retrieve Campaign 🤩</h2>
-    <button disabled id="btn-get-campaign" onclick="getCampaign()">Get Campaign</button>
+    <button type="button" disabled id="btn-get-campaign" onclick="getCampaign()">Get Campaign</button>
     <div id="show-get-campaign"></div>
   </div>
 
   <hr>
   <div>
     <h2>Burner Wallet 🧯</h2>
-    <button id="btn-create-burner-wallet" onclick="createBurnerWallet()">Generate Burner Wallet</button>
+    <button type="button" id="btn-create-burner-wallet" onclick="createBurnerWallet()">Generate Burner Wallet</button>
     <div id="burner-wallet"></div>
   </div>
 
   <hr>
   <div>
     <h2>MetaMask 🦊</h2>
-    <button id="btn-metamask" onclick="connectMetamask()">Connect to Metamask</button>
+    <button type="button" id="btn-metamask" onclick="connectMetamask()">Connect to Metamask</button>
     <div id="metamask-account"></div>
   </div>
 
   <hr>
   <div>
     <h2>Anchor ⚓</h2>
-    <button id="btn-anchor" onclick="connectAnchor()">Connect to Anchor</button>
+    <button type="button" id="btn-anchor" onclick="connectAnchor()">Connect to Anchor</button>
     <div id="anchor-account"></div>
   </div>
 
   <hr>
   <div>
     <h2>Connect Account 🖇</h2>
-    <button disabled id="btn-connect-account" onclick="connectEffectAccount()">Connect Account</button>
+    <button type="button" disabled id="btn-connect-account" onclick="connectEffectAccount()">Connect Account</button>
     <p id="connect-to">Generate new burner wallet and register account.</p>
     <div id="connect-account"></div>
   </div>
@@ -68,25 +69,25 @@
   <hr>
   <div>
     <h2>Campaign 🍨</h2>
-    <button disabled id="btn-make-campaign" onclick="makeCampaign()">Make Campaign</button>
+    <button type="button" disabled id="btn-make-campaign" onclick="makeCampaign()">Make Campaign</button>
     <div id="show-campaign"></div>
   </div>
 
   <hr>
   <div>
     <h2>Batch 🛁</h2>
-    <button disabled id="btn-make-batch" onclick="makeBatch()">Make Batch</button>
+    <button type="button" disabled id="btn-make-batch" onclick="makeBatch()">Make Batch</button>
     <div id="show-batch"></div>
   </div>
 
   <hr>
   <div>
     <h2>Results 🌙</h2>
-    <button disabled id="btn-get-result" onclick="getResults()">Get Results</button>
+    <button type="button" disabled id="btn-get-result" onclick="getResults()">Get Results</button>
     <div id="show-result"></div>
   </div>
 
-  <script src="main.js?v=5"></script>
+  <script src="main.js"></script>
 </body>
 
 </html>
