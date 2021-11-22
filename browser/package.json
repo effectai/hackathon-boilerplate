@@ -7,9 +7,10 @@
     "serve": "http-server -c -1"
   },
   "keywords": [],
-  "author": "",
+  "author": "Effect Network",
   "license": "ISC",
   "dependencies": {
+    "@effectai/effect-js": "latest"
   },
   "devDependencies": {
     "http-server": "^14.0.0"
