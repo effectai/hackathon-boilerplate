@@ -56,6 +56,10 @@ const main = async () => {
         ]
     }
    
+    // Make sure you have enough funds to pay for the batch.
+    // Join our discord and use the faucet bot to get funds.
+    // https://discord.gg/bq4teBnH3V
+
     const repetitions = 1
     // Create batch for campaign.
     // same here as for campaign, id of batch needs to be returned

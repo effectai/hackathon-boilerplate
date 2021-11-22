@@ -55,6 +55,11 @@ const main = async () => {
             {"ipfs": "bafkreifu5xciyxpwnmkorzddanqtc66i43q5cn4sdkb3l563yjzd7s3274"}
         ]
     }
+
+    // Make sure you have enough funds to pay for the batch.
+    // Join our discord and use the faucet bot to get funds.
+    // https://discord.gg/bq4teBnH3V
+
    
     const repetitions = 1
     // Create batch for campaign.
