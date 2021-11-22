@@ -39,15 +39,13 @@ const main = async () => {
     const makeCampaign = await client.force.makeCampaign(campaignToIpfs, '11')
     console.log('makeCampaign', makeCampaign)
 
-    // TEMP
-    // TODO: get campaignId from response makeCampaign
-    const campaignId = 88
-    const campaign = await client.force.getCampaign(campaignId)
+    // Retrieve last campaign
+    const campaign = client.force.getMyLastCampaign()
     console.log('Campaign', campaign)
 
     // Get Campaign Batches.
-    const batches = await client.force.getCampaignBatches(campaignId)
-    console.log(`Batches for campaign ${campaignId}`, batches)
+    const batches = await client.force.getCampaignBatches(campaign.id)
+    console.log(`Batches for campaign ${campaign.id}`, batches)
 
     const content = {
         'tasks': [

@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@effectai/effect-js": "latest",
+    "@effectai/effect-js": "0.0.45",
     "eosjs": "^22.1.0",
     "web3": "^1.6.0"
   }
