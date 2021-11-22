@@ -1,5 +1,5 @@
 console.log("Live from Amsterdam, it's Effect Network! 🔥️🔥️🔥️");
-let sdk, campaignid;
+let client, campaignid;
 let connectAccount = { providerName: undefined, provider: undefined, account: undefined };
 
 /**
@@ -10,14 +10,14 @@ let connectAccount = { providerName: undefined, provider: undefined, account: un
 function generateClient() {
     console.log('Creating SDK...')
     try {
-        sdk = new effectsdk.EffectClient('kylin')
-        console.log(sdk)
+        client = new effectsdk.EffectClient('kylin')
+        console.log(client)
         const divSdkClient = document.getElementById('sdk-client');
         divSdkClient.innerHTML =
-            `SDK Client: Connected ✅ (See console for more info.): 
-         <p>Host: ${sdk.config.host}</p>
-         <p>IPFS ${sdk.config.ipfs_node}</p>
-         <p>Network: ${sdk.config.network}</p>`;
+            `SDK Client: Connected (See console for more info.): 
+         <p>Host: ${client.config.host}</p>
+         <p>IPFS ${client.config.ipfs_node}</p>
+         <p>Network: ${client.config.network}</p>`;
 
         // If successfull remove disabled attribute for buttons.
         document.getElementById('btn-connect-account').removeAttribute('disabled')
@@ -33,8 +33,10 @@ function generateClient() {
  * Calling methods from the effectclient without connecting an account.
  */
 async function getCampaign() {
-    const balanceReponse = await sdk.force.getPendingBalance();
-    const campaignResponse = await sdk.force.getCampaign(5)
+    const balanceReponse = await client.force.getPendingBalance();
+
+    const randomNumber = Math.floor(Math.random() * 10) + 1;
+    const campaignResponse = await client.force.getCampaign(randomNumber)
     console.log(JSON.stringify(campaignResponse), JSON.stringify(balanceReponse))
 
     document.getElementById('show-get-campaign').innerHTML =
@@ -152,7 +154,7 @@ async function connectEffectAccount() {
     let connectReponse;
     try {
         if (connectAccount.provider) {
-            connectReponse = await sdk.connectAccount(connectAccount.provider, connectAccount.account)
+            connectReponse = await client.connectAccount(connectAccount.provider, connectAccount.account)
         } else {
             alert('Login with on of the wallet.')
         }
@@ -190,7 +192,7 @@ async function makeCampaign() {
         }
 
         const quantity = 1; // How much EFX is rewarded for each task.
-        const makeCampaingResponse = await sdk.force.makeCampaign(campaignToIpfs, quantity)
+        const makeCampaingResponse = await client.force.makeCampaign(campaignToIpfs, quantity)
         console.log(makeCampaingResponse)
 
         document.getElementById('btn-make-batch').removeAttribute('disabled')
@@ -209,13 +211,11 @@ async function makeCampaign() {
  */
 async function makeBatch() {
     try {
-        const campaignId = 88
-        const batchId = 3
-        const campaign = await sdk.force.getCampaign(campaignId)
-        console.log('Campaign', campaign)
+        const campaign = await client.force.getMyLastCampaign()
+        console.log(`Campaign 🚒:\n${JSON.stringify(campaign)}`)
 
         // Get Campaign Batches.
-        const batches = await sdk.force.getCampaignBatches(campaignId)
+        const batches = await client.force.getCampaignBatches(campaignId)
         console.log(`Batches for campaign ${campaignId}`, batches)
 
         const content = {
@@ -232,7 +232,7 @@ async function makeBatch() {
         // same here as for campaign, id of batch needs to be returned
 
         // This is failing, invalid signature error
-        const batchResponse = await sdk.force.createBatch(campaignId, batchId, content, repetitions)
+        const batchResponse = await client.force.createBatch(campaign.id, batches.length, content, repetitions)
         document.getElementById('show-batch').innerHTML = `<p>${JSON.stringify(batchResponse, null, 2)}</p>`
         console.log(batch);
 
@@ -250,7 +250,7 @@ async function getResults() {
     console.log('generating key...')
     try {
         // Get task submissions of batch.
-        const taskResults = await sdk.force.getTaskSubmissionsForBatch()
+        const taskResults = await client.force.getTaskSubmissionsForBatch()
         console.log('taskResults for new batch', taskResults)
     } catch (error) {
         alert('Something went wrong. See console for error message')
