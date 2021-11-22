@@ -3,7 +3,7 @@ const fs = require('fs')
 
 const main = async () => {
     console.log('Starting EOS example.')
-    const sdk = new EffectClient('kylin')
+    const client = new EffectClient('kylin')
 
     // Instantiating bsc account.
     const account = createAccount(
@@ -15,7 +15,7 @@ const main = async () => {
     const web3 = createWallet(account)
 
     // Connect web3 account to SDK
-    const effectAccount = await sdk.connectAccount(web3);
+    const effectAccount = await client.connectAccount(web3);
 
     console.log('effectAccount', effectAccount)
 
@@ -36,17 +36,17 @@ const main = async () => {
 
     // Create campaign.
     // campaign object, reward
-    const makeCampaign = await sdk.force.makeCampaign(campaignToIpfs, '11')
+    const makeCampaign = await client.force.makeCampaign(campaignToIpfs, '11')
     console.log('makeCampaign', makeCampaign)
 
     // TEMP
     // TODO: get campaignId from response makeCampaign
     const campaignId = 88
-    const campaign = await sdk.force.getCampaign(campaignId)
+    const campaign = await client.force.getCampaign(campaignId)
     console.log('Campaign', campaign)
 
     // Get Campaign Batches.
-    const batches = await sdk.force.getCampaignBatches(campaignId)
+    const batches = await client.force.getCampaignBatches(campaignId)
     console.log(`Batches for campaign ${campaignId}`, batches)
 
     const content = {
@@ -61,11 +61,11 @@ const main = async () => {
     const repetitions = 1
     // Create batch for campaign.
     // same here as for campaign, id of batch needs to be returned
-    const batch = await sdk.force.createBatch(campaign.id, batches.length, content, repetitions)
+    const batch = await client.force.createBatch(campaign.id, batches.length, content, repetitions)
     console.log('createBatch', batch)
 
     // Get task submissions of batch.
-    const taskResults = await sdk.force.getTaskSubmissionsForBatch(batches.length)
+    const taskResults = await client.force.getTaskSubmissionsForBatch(batches.length)
     console.log('taskResults for new batch', taskResults)
 }
 
