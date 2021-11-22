@@ -205,9 +205,11 @@ async function makeCampaign() {
 }
 
 /**
- * TODO
  * Make Batch
  * Is the method complete in the smart contract in order to retrieve the campaign id???
+ * Make sure you have enough funds to pay for the batch.
+ * Join our discord and use the faucet bot to get funds.
+ * https://discord.gg/bq4teBnH3V
  */
 async function makeBatch() {
     try {
@@ -215,8 +217,8 @@ async function makeBatch() {
         console.log(`Campaign 🚒:\n${JSON.stringify(campaign)}`)
 
         // Get Campaign Batches.
-        const batches = await client.force.getCampaignBatches(campaignId)
-        console.log(`Batches for campaign ${campaignId}`, batches)
+        const batches = await client.force.getCampaignBatches(campaign.id)
+        console.log(`Batches for campaign ${campaign.id}`, batches)
 
         const content = {
             'tasks': [
@@ -227,12 +229,10 @@ async function makeBatch() {
             ]
         }
 
-        const repetitions = 1
-        // Create batch for campaign.
-        // same here as for campaign, id of batch needs to be returned
+        const repetitions = '1'
+        const batchid = batches.length + 1
 
-        // This is failing, invalid signature error
-        const batchResponse = await client.force.createBatch(campaign.id, batches.length, content, repetitions)
+        const batchResponse = await client.force.createBatch(campaign.id, batchid, content, repetitions)
         document.getElementById('show-batch').innerHTML = `<p>${JSON.stringify(batchResponse, null, 2)}</p>`
         console.log(batch);
 
