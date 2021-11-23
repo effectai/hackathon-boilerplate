@@ -1,4 +1,5 @@
 const { EffectClient, createAccount, createWallet } = require('@effectai/effect-js')
+const readline = require('readline')
 const fs = require('fs')
 
 const main = async () => {
@@ -8,8 +9,9 @@ const main = async () => {
     // Instantiating bsc account.
     const account = createAccount(
         // leave empty to generate new private key
-        '0x6f46d8d7c9684ed049c941758cb9186eb2b5758221a229e27861fe357edb770d'
+        process.argv[2] ?? null
     )
+
     // Generate web3 instance from account with private key.
     // Could also be the web3 object with a MetaMask connection etc.
     const web3 = createWallet(account)
@@ -17,15 +19,41 @@ const main = async () => {
     // Connect web3 account to SDK
     const effectAccount = await client.connectAccount(web3);
 
-    console.log('effectAccount', effectAccount)
+    // console.log(`Starting eos.js\n${JSON.stringify(effectAccount, null, 2)}`)
+
+
+    // if argv less than 3 exit
+    if (process.argv.length <= 3) {
+        console.log(
+        `Usage: node eos.js <private key>
+        If no privateKey provided burnerwallet will be created.
+        Please make sure you have requested Testnet EFX for this account so that you can create batches. 
+        Join our discord, go to the faucet channel to get funds.
+        https://discord.gg/bq4teBnH3V
+        Use the command following command to get tokens for your account.
+        !get_tokens ${effectAccount.accountName} 
+        `)
+
+        const rl = readline.createInterface({input: process.stdin, output: process.stdout})
+        rl.question('Press any key to continue after you have recieved funds from the bot....', (answer) => {
+            console.log("Thanks! Now let's continue, making the campaign and batches.")
+        })
+        rl.close()
+        // process.exit(1)
+    }
+
+    // wait for response from user in console to continue
+    
+    
+
+
 
     const templateContent = fs.readFileSync('./template.html', 'utf8').toString()
 
     const campaignToIpfs = {
         title: 'Random Title',
         description: 'Networked well-modulated instruction set',
-        instructions: `American whole magazine truth stop whose. On traditional measure example sense peace. Would mouth relate own chair.
-        Together range line beyond. First policy daughter need kind miss`,
+        instructions: `American whole magazine truth stop whose. On traditional measure example sense peace.`,
         template:   templateContent,
         image: 'https://ipfs.effect.ai/ipfs/bafkreiggnttdaxleeii6cdt23i4e24pfcvzyrndf5kzfbqgf3fxjryj5s4',
         category: 'Image Labeling',
@@ -36,7 +64,7 @@ const main = async () => {
 
     // Create campaign.
     // campaign object, reward
-    const makeCampaign = await client.force.makeCampaign(campaignToIpfs, '11')
+    const makeCampaign = await client.force.makeCampaign(campaignToIpfs, '2')
     console.log('makeCampaign', makeCampaign)
 
     // Retrieve last campaign

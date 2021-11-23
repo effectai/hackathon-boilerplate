@@ -10,7 +10,7 @@ let connectAccount = { providerName: undefined, provider: undefined, account: un
 function generateClient() {
     console.log('Creating SDK...')
     try {
-        client = new effectsdk.EffectClient('kylin')
+        client = new effectsdk.EffectClient('jungle') //kylin
         console.log(client)
         const divSdkClient = document.getElementById('sdk-client');
         divSdkClient.innerHTML =
