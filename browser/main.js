@@ -1,5 +1,5 @@
 console.log("Live from Amsterdam, it's Effect Network! 🔥️🔥️🔥️");
-let client, campaignid;
+let client, campaignid, batchidentification;
 let connectAccount = { providerName: undefined, provider: undefined, account: undefined };
 
 /**
@@ -196,8 +196,26 @@ async function makeCampaign() {
         console.log(makeCampaingResponse)
 
         document.getElementById('btn-make-batch').removeAttribute('disabled')
+
+        const retrieveCampaign = await client.force.getMyLastCampaign()
         const divShowCampaign = document.getElementById('show-campaign');
-        divShowCampaign.innerHTML = `<p>${JSON.stringify(makeCampaingResponse, null, 2)}</p>`
+        divShowCampaign.innerHTML = `<p>${JSON.stringify(retrieveCampaign, null, 2)}</p>`
+    } catch (error) {
+        alert('Something went wrong. See console for error message')
+        console.error(error)
+    }
+}
+
+/**
+ * Retrieve the last campaign you made with this account.
+ */
+async function getLastCampaign() {
+    console.log('getting last campaign...')
+    try {
+        const retrieveCampaign = await client.force.getMyLastCampaign()
+        const divShowCampaign = document.getElementById('show-campaign');
+        divShowCampaign.innerHTML = `<p>${JSON.stringify(retrieveCampaign, null, 2)}</p>`
+        document.getElementById('btn-make-batch').removeAttribute('disabled')
     } catch (error) {
         alert('Something went wrong. See console for error message')
         console.error(error)
@@ -233,8 +251,15 @@ async function makeBatch() {
         const batchid = batches.length + 1
 
         const batchResponse = await client.force.createBatch(campaign.id, batchid, content, repetitions)
-        document.getElementById('show-batch').innerHTML = `<p>${JSON.stringify(batchResponse, null, 2)}</p>`
-        console.log(batch);
+        // document.getElementById('show-batch').innerHTML = `<p>${JSON.stringify(batchResponse, null, 2)}</p>`
+        console.log(batchResponse);
+        const newBatch = await client.force.getCampaignBatches(campaign.id)
+        batchidentification = newBatch[newBatch.length - 1].batch_id
+        document.getElementById('show-batch').innerHTML = `<p>${JSON.stringify(newBatch, null, 2)}</p>`
+
+
+        document.getElementById('btn-get-result').removeAttribute('disabled')
+
 
     } catch (error) {
         alert('Something went wrong. See console for error message')
@@ -250,8 +275,10 @@ async function getResults() {
     console.log('generating key...')
     try {
         // Get task submissions of batch.
-        const taskResults = await client.force.getTaskSubmissionsForBatch()
+        const taskResults = await client.force.getTaskSubmissionsForBatch(batchidentification)
         console.log('taskResults for new batch', taskResults)
+
+        document.getElementById('show-result').innerHTML = `<p>${JSON.stringify(taskResults, null, 2)}</p>`
     } catch (error) {
         alert('Something went wrong. See console for error message')
         console.error(error)
