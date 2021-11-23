@@ -70,6 +70,7 @@
   <div>
     <h2>Campaign 🍨</h2>
     <button type="button" disabled id="btn-make-campaign" onclick="makeCampaign()">Make Campaign</button>
+    <button type="button" disabled id="btn-make-campaign" onclick="getLastCampaign()">Get Last Campaign</button>
     <div id="show-campaign"></div>
   </div>
 
@@ -79,7 +80,8 @@
     <p>
       * Make sure you have enough funds to pay for the batch.
       * Join our discord and use the faucet bot to get funds.
-      * <a target="blank" href="https://discord.gg/bq4teBnH3V">Join the Effect Network Discord</a>
+      * <a target="blank" href="https://discord.gg/bq4teBnH3V">Join the Effect Network Discord Faucet channel.</a>
+      * Pass in your account_name in order to get testnet EFX.
     </p>
     <button type="button" disabled id="btn-make-batch" onclick="makeBatch()">Make Batch</button>
     <div id="show-batch"></div>
@@ -88,7 +90,7 @@
   <hr>
   <div>
     <h2>Results 🌙</h2>
-    <button type="button" id="btn-get-result" onclick="getResults()">Get Results</button>
+    <button disabled type="button" id="btn-get-result" onclick="getResults()">Get Results</button>
     <div id="show-result"></div>
   </div>
 
