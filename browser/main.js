@@ -159,6 +159,7 @@ async function connectEffectAccount() {
             alert('Login with on of the wallet.')
         }
         document.getElementById('btn-make-campaign').removeAttribute('disabled')
+        document.getElementById('btn-last-campaign').removeAttribute('disabled')
         document.getElementById('connect-account').innerHTML = `<p>${JSON.stringify(connectReponse, null, 2)}</p>`
     } catch (error) {
         alert('Something went wrong. See console for error message')
@@ -180,13 +181,13 @@ async function makeCampaign() {
         const templateText = await templateResponse.text()
 
         const campaignToIpfs = {
-            title: 'SpaceX Satelite Identifier.',
+            title: 'Tweet Sentiment',
             description: 'Networked well-modulated instruction set',
             instructions: `American whole magazine truth stop whose. On traditional measure example sense peace`,
             template: templateText,
             image: 'https://ipfs.effect.ai/ipfs/bafkreiggnttdaxleeii6cdt23i4e24pfcvzyrndf5kzfbqgf3fxjryj5s4',
-            category: 'Image Labeling',
-            example_task: { 'image_url': 'https://ipfs.effect.ai/ipfs/bafkreidrxwhqsxa22uyjamz7qq3lh7pv2eg3ykodju6n7cgprmjpal2oga' },
+            category: 'Effect Socials',
+            example_task: { 'tweet_id': '20' },
             version: 1,
             reward: 1
         }
@@ -240,25 +241,31 @@ async function makeBatch() {
 
         const content = {
             'tasks': [
-                { "ipfs": "bafkreiggnttdaxleeii6cdt23i4e24pfcvzyrndf5kzfbqgf3fxjryj5s4" },
-                { "ipfs": "bafkreidrxwhqsxa22uyjamz7qq3lh7pv2eg3ykodju6n7cgprmjpal2oga" },
-                { "ipfs": "bafkreid2ocabg7mo235uuwactlcf7vzxyagoxeroyrubfufwobtqz3q27q" },
-                { "ipfs": "bafkreifu5xciyxpwnmkorzddanqtc66i43q5cn4sdkb3l563yjzd7s3274" }
+                { "tweet_id": "20" },
+                { "tweet_id": "22" },
+                { "tweet_id": "23" },
+                { "tweet_id": "24" }
             ]
         }
 
-        const repetitions = '1'
-        const batchid = batches.length + 1
+        const tryAgain = async () => {
+            const repetitions = '1'
+            const batchid = batches.length + 1
+    
+            const batchResponse = await client.force.createBatch(campaign.id, batchid, content, repetitions)
+            // document.getElementById('show-batch').innerHTML = `<p>${JSON.stringify(batchResponse, null, 2)}</p>`
+            console.log(batchResponse);
+            const newBatch = await client.force.getCampaignBatches(campaign.id)
+            batchidentification = newBatch.pop().batch_id
+            document.getElementById('show-batch').innerHTML = `<p>${JSON.stringify(newBatch, null, 2)}</p>`
+            document.getElementById('btn-get-result').removeAttribute('disabled')    
+        }
 
-        const batchResponse = await client.force.createBatch(campaign.id, batchid, content, repetitions)
-        // document.getElementById('show-batch').innerHTML = `<p>${JSON.stringify(batchResponse, null, 2)}</p>`
-        console.log(batchResponse);
-        const newBatch = await client.force.getCampaignBatches(campaign.id)
-        batchidentification = newBatch[newBatch.length - 1].batch_id
-        document.getElementById('show-batch').innerHTML = `<p>${JSON.stringify(newBatch, null, 2)}</p>`
-
-
-        document.getElementById('btn-get-result').removeAttribute('disabled')
+        try {
+            await tryAgain()
+        } catch (error) {
+            await tryAgain()
+        }
 
 
     } catch (error) {
@@ -275,8 +282,10 @@ async function getResults() {
     console.log('generating key...')
     try {
         // Get task submissions of batch.
-        const taskResults = await client.force.getTaskSubmissionsForBatch(batchidentification)
-        console.log('taskResults for new batch', taskResults)
+        const lastcampaign = await client.force.getMyLastCampaign()
+        const lastBatch = await client.force.getCampaignBatches(lastcampaign.id)
+        const taskResults = await client.force.getTaskSubmissionsForBatch(lastBatch.pop().batch_id)
+        console.log(`TaskResults for batch with id: ${batchidentification}`, taskResults)
 
         document.getElementById('show-result').innerHTML = `<p>${JSON.stringify(taskResults, null, 2)}</p>`
     } catch (error) {
