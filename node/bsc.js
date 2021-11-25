@@ -38,14 +38,11 @@ const main = async () => {
     // campaign object, reward
     const makeCampaign = await client.force.makeCampaign(campaignToIpfs, '8')
     console.log('makeCampaign', makeCampaign)
+    await client.force.waitTransaction(makeCampaign.transaction_id)
 
     // Retrieve last campaign
     const campaign = client.force.getMyLastCampaign()
     console.log('Campaign', campaign)
-
-    // Get Campaign Batches.
-    const batches = await client.force.getCampaignBatches(campaign.id)
-    console.log(`Batches for campaign ${campaign.id}`, batches)
 
     const content = {
         'tasks': [
@@ -64,11 +61,15 @@ const main = async () => {
     const repetitions = 1
     // Create batch for campaign.
     // same here as for campaign, id of batch needs to be returned
-    const batch = await client.force.createBatch(campaign.id, batches.length, content, repetitions)
-    console.log('createBatch', batch)
+    const batchResponse = await client.force.createBatch(campaign.id, content, repetitions)
+    console.log('createBatch', batchResponse)
+    await client.force.waitTransaction(batchResponse.transaction_id)
+    const batch = await client.force.getCampaignBatches(campaign.id)
+
+
 
     // Get task submissions of batch.
-    const taskResults = await client.force.getTaskSubmissionsForBatch(batches.length)
+    const taskResults = await client.force.getTaskSubmissionsForBatch(batch.batch_id)
     console.log('taskResults for new batch', taskResults)
 }
 
