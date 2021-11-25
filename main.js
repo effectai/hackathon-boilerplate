@@ -195,6 +195,7 @@ async function makeCampaign() {
         const quantity = 1; // How much EFX is rewarded for each task.
         const makeCampaingResponse = await client.force.makeCampaign(campaignToIpfs, quantity)
         console.log(makeCampaingResponse)
+        await client.force.waitTransaction(makeCampaign.transaction_id)
 
         document.getElementById('btn-make-batch').removeAttribute('disabled')
 
@@ -235,10 +236,6 @@ async function makeBatch() {
         const campaign = await client.force.getMyLastCampaign()
         console.log(`Campaign 🚒:\n${JSON.stringify(campaign)}`)
 
-        // Get Campaign Batches.
-        const batches = await client.force.getCampaignBatches(campaign.id)
-        console.log(`Batches for campaign ${campaign.id}`, batches)
-
         const content = {
             'tasks': [
                 { "tweet_id": "20" },
@@ -248,25 +245,16 @@ async function makeBatch() {
             ]
         }
 
-        const tryAgain = async () => {
-            const repetitions = '1'
-            const batchid = batches.length + 1
-    
-            const batchResponse = await client.force.createBatch(campaign.id, batchid, content, repetitions)
-            // document.getElementById('show-batch').innerHTML = `<p>${JSON.stringify(batchResponse, null, 2)}</p>`
-            console.log(batchResponse);
-            const newBatch = await client.force.getCampaignBatches(campaign.id)
-            batchidentification = newBatch.pop().batch_id
-            document.getElementById('show-batch').innerHTML = `<p>${JSON.stringify(newBatch, null, 2)}</p>`
-            document.getElementById('btn-get-result').removeAttribute('disabled')    
-        }
+        const repetitions = '1'
 
-        try {
-            await tryAgain()
-        } catch (error) {
-            await tryAgain()
-        }
-
+        const batchResponse = await client.force.createBatch(campaign.id, content, repetitions)
+        // document.getElementById('show-batch').innerHTML = `<p>${JSON.stringify(batchResponse, null, 2)}</p>`
+        console.log(batchResponse);
+        await client.force.waitTransaction(batchResponse.transaction_id)
+        const newBatch = await client.force.getCampaignBatches(campaign.id)
+        batchidentification = newBatch.pop().batch_id
+        document.getElementById('show-batch').innerHTML = `<p>${JSON.stringify(newBatch, null, 2)}</p>`
+        document.getElementById('btn-get-result').removeAttribute('disabled')    
 
     } catch (error) {
         alert('Something went wrong. See console for error message')
