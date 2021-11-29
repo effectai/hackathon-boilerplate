@@ -1,4 +1,6 @@
 const { EffectClient, createAccount, createWallet } = require('@effectai/effect-js')
+const readline = require('readline')
+const util = require('util')
 const fs = require('fs')
 
 const main = async () => {
@@ -8,8 +10,9 @@ const main = async () => {
     // Instantiating bsc account.
     const account = createAccount(
         // leave empty to generate new private key
-        '0x6f46d8d7c9684ed049c941758cb9186eb2b5758221a229e27861fe357edb770d'
+        process.argv[2] ?? null
     )
+
     // Generate web3 instance from account with private key.
     // Could also be the web3 object with a MetaMask connection etc.
     const web3 = createWallet(account)
@@ -18,6 +21,30 @@ const main = async () => {
     const effectAccount = await client.connectAccount(web3);
 
     console.log('effectAccount', effectAccount)
+
+    // if argv less than 3 exit
+    if (process.argv.length <= 2) {
+        console.log(`
+        Usage: node eos.js <private key>
+        If no privateKey is provided a burnerwallet will be created.
+        Please make sure you have requested Testnet EFX for this account so that you can create batches. 
+        Join our discord, go to the FAUCET CHANNEL to get funds.
+        https://discord.gg/bq4teBnH3V
+        Use the following command to get tokens for your account.
+        !get_tokens ${effectAccount.accountName}
+        \n
+        ${JSON.stringify(effectAccount, null, 2)}
+        `)
+
+        //Create readline interface and wait until user has retrieved funds from faucet bot.
+        const rl = readline.createInterface({input: process.stdin, output: process.stdout})
+        const askQuestion = util.promisify(rl.question).bind(rl)
+        await askQuestion('Press ENTER to continue after you have recieved funds from the faucet bot....', (answer) => {
+            console.log("Thanks! Now let's continue, making the campaign and batches.")
+            rl.close()
+        })
+    }
+    
 
     const templateContent = fs.readFileSync('./template.html', 'utf8').toString()
 
@@ -36,7 +63,8 @@ const main = async () => {
 
     // Create campaign.
     // campaign object, reward
-    const makeCampaign = await client.force.makeCampaign(campaignToIpfs, '8')
+    const efx_quantity = '1'
+    const makeCampaign = await client.force.makeCampaign(campaignToIpfs, efx_quantity)
     console.log('makeCampaign', makeCampaign)
     await client.force.waitTransaction(makeCampaign.transaction_id)
 
@@ -46,10 +74,10 @@ const main = async () => {
 
     const content = {
         'tasks': [
-            {"ipfs": "bafkreiggnttdaxleeii6cdt23i4e24pfcvzyrndf5kzfbqgf3fxjryj5s4"}, 
-            {"ipfs": "bafkreidrxwhqsxa22uyjamz7qq3lh7pv2eg3ykodju6n7cgprmjpal2oga"}, 
-            {"ipfs": "bafkreid2ocabg7mo235uuwactlcf7vzxyagoxeroyrubfufwobtqz3q27q"}, 
-            {"ipfs": "bafkreifu5xciyxpwnmkorzddanqtc66i43q5cn4sdkb3l563yjzd7s3274"}
+            {"ipfs": "https://ipfs.effect.ai/bafkreiggnttdaxleeii6cdt23i4e24pfcvzyrndf5kzfbqgf3fxjryj5s4"}, 
+            {"ipfs": "https://ipfs.effect.ai/bafkreidrxwhqsxa22uyjamz7qq3lh7pv2eg3ykodju6n7cgprmjpal2oga"}, 
+            {"ipfs": "https://ipfs.effect.ai/bafkreid2ocabg7mo235uuwactlcf7vzxyagoxeroyrubfufwobtqz3q27q"}, 
+            {"ipfs": "https://ipfs.effect.ai/bafkreifu5xciyxpwnmkorzddanqtc66i43q5cn4sdkb3l563yjzd7s3274"}
         ]
     }
 
