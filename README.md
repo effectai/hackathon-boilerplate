@@ -14,5 +14,5 @@ Join the hackathon and get your first effect-js project running!
 A demo of the browser boilerplate can be found at the following link:
 [Hackathon Browser BoilerPlate Demo](https://effectai.github.io/hackathon-boilerplate/)
 
-# Quikcstart
+# Quickstart
 Take a look at the [quickstart guide](https://developer.effect.network/quickstart/) in order to understand how to install and use the library.
