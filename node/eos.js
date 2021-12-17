@@ -1,4 +1,5 @@
-const { EffectClient, createAccount, createWallet } = require('@effectai/effect-js')
+const { EffectClient } = require('@effectai/effect-js')
+const { JsSignatureProvider } = require('eosjs/dist/eosjs-jssig')
 const readline = require('readline')
 const util = require('util')
 const fs = require('fs')
@@ -7,18 +8,14 @@ const main = async () => {
     console.log('Starting EOS example.')
     const client = new EffectClient('jungle')
 
-    // Instantiating bsc account.
-    const account = createAccount(
-        // leave empty to generate new private key
-        process.argv[2] ?? null
-    )
+    const provider = new JsSignatureProvider(['secretKey'])
+    const account = {
+        accountName: 'EOS_name',
+        permission: 'active',
+        publicKey: 'publicKey'
+    }
 
-    // Generate web3 instance from account with private key.
-    // Could also be the web3 object with a MetaMask connection etc.
-    const web3 = createWallet(account)
-
-    // Connect web3 account to SDK
-    const effectAccount = await client.connectAccount(web3);
+    const effectAccount = await client.connectAccount(provider, account);
 
     // console.log(`Starting eos.js\n${JSON.stringify(effectAccount, null, 2)}`)
 
@@ -40,7 +37,7 @@ const main = async () => {
         //Create readline interface and wait until user has retrieved funds from faucet bot.
         const rl = readline.createInterface({input: process.stdin, output: process.stdout})
         const askQuestion = util.promisify(rl.question).bind(rl)
-        await askQuestion('Press ENTER to continue after you have recieved funds from the faucet bot....', (answer) => {
+        await askQuestion('Press ENTER to continue after you have received funds from the faucet bot....', (answer) => {
             console.log("Thanks! Now let's continue, making the campaign and batches.")
             rl.close()
         })
