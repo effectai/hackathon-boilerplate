@@ -121,10 +121,12 @@ async function connectAnchor() {
         const transport = new AnchorLinkBrowserTransport()
         const alink = new AnchorLink({
             transport,
+            chainId: '2a02a0053e5a8cf73a56ba0fda11e4d92e0238a4a2aa74fccf46d5a910746840',
+            rpc: 'https://jungle3.greymass.com',
             chains: [
                 {
-                    chainId: '5fff1dae8dc8e2fc4d5b23b2c7665c97f9e9d8edf2b6485a86ba311c25639191',
-                    nodeUrl: 'https://api.kylin.alohaeos.com',
+                    chainId: '2a02a0053e5a8cf73a56ba0fda11e4d92e0238a4a2aa74fccf46d5a910746840',
+                    nodeUrl: 'https://jungle3.greymass.com',
                 }
             ],
         })
@@ -195,7 +197,7 @@ async function makeCampaign() {
         const quantity = 1; // How much EFX is rewarded for each task.
         const makeCampaingResponse = await client.force.makeCampaign(campaignToIpfs, quantity)
         console.log(makeCampaingResponse)
-        await client.force.waitTransaction(makeCampaign.transaction_id)
+        await client.force.waitTransaction(makeCampaign)
 
         document.getElementById('btn-make-batch').removeAttribute('disabled')
 
@@ -250,7 +252,7 @@ async function makeBatch() {
         const batchResponse = await client.force.createBatch(campaign.id, content, repetitions)
         // document.getElementById('show-batch').innerHTML = `<p>${JSON.stringify(batchResponse, null, 2)}</p>`
         console.log(batchResponse);
-        await client.force.waitTransaction(batchResponse.transaction_id)
+        await client.force.waitTransaction(batchResponse)
         const newBatch = await client.force.getCampaignBatches(campaign.id)
         batchidentification = newBatch.pop().batch_id
         document.getElementById('show-batch').innerHTML = `<p>${JSON.stringify(newBatch, null, 2)}</p>`
